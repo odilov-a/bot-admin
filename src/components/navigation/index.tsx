@@ -1,16 +1,10 @@
 import React, { useState } from "react";
 import { Menu } from "antd";
-import { FormOutlined, AppstoreAddOutlined, StarOutlined, CopyOutlined, FileImageOutlined, YoutubeOutlined } from "@ant-design/icons";
+import { AppstoreAddOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import {
-  Translation,
-  LogOut,
-  Light,
-  Dark,
-} from "assets/images/icons";
+import { Translation } from "assets/images/icons";
 import useStore from "store";
 import { useHooks } from "hooks";
-import { storage } from "services";
 
 interface MenuItem {
   key: string;
@@ -41,40 +35,10 @@ const Navigation: React.FC = () => {
   };
   const items: MenuItem[] = [
     {
-      key: "blogs",
-      label: "Bloglar",
-      icon: <FormOutlined />,
-      route: "/blogs",
-    },
-    {
       key: "products",
       label: "Mahsulotlar",
       icon: <AppstoreAddOutlined />,
       route: "/products",
-    },
-    {
-      key: "certificates",
-      label: "Sertifikatlar",
-      icon: <CopyOutlined />,
-      route: "/certificates",
-    },
-    {
-      key: "partners",
-      label: "Hamkorlar",
-      icon: <StarOutlined />,
-      route: "/partners",
-    },
-    {
-      key: "galleries",
-      label: "Gallereya",
-      icon: <FileImageOutlined />,
-      route: "/galleries",
-    },
-    {
-      key: "youtubes",
-      label: "YouTube",
-      icon: <YoutubeOutlined />,
-      route: "/youtubes",
     },
     {
       key: "translations",
@@ -83,20 +47,6 @@ const Navigation: React.FC = () => {
       route: "/translations",
     },
   ];
-  // document.body.classList.add(isDarkMode ? "dark" : "light");
-  // const changeThemeFunc = () => {
-  //   setIsDarkMode((prevMode) => !prevMode);
-  //   changeTheme(isDarkMode ? "light" : "dark");
-  //   storage.set("theme", isDarkMode ? "light" : "dark");
-  //   if (!isDarkMode) {
-  //     document.body.classList.remove("light");
-  //     document.body.classList.add("dark");
-  //   } else {
-  //     document.body.classList.remove("dark");
-  //     document.body.classList.add("light");
-  //   }
-  // };
-
   return (
     <Menu
       mode="inline"
@@ -145,52 +95,6 @@ const Navigation: React.FC = () => {
           )}
         </React.Fragment>
       ))}
-      {/* <div>
-        <div className="absolute bottom-[36px] left-[20%]">
-          <div className="flex justify-center mb-[60px]">
-            <div className="profile-panel mt-[100px] transition-all ease-in-out duration-300">
-              <div className="username-input w-[175px] relative z-10 px-[6px] py-[4px] rounded-[16px] bg-[#E6ECFE] flex justify-between items-center">
-                <Link
-                  to="/profile"
-                  className="inline-block text-[12px] py-[14px] px-[8px] transition rounded-[8px] hover:bg-[#DADFF1] hover:text-[#000]"
-                >
-                  Username
-                </Link>
-                <div
-                  className="log-out cursor-pointer transition-all ease-in-out duration-300  p-[4px] hover:bg-[#DADFF1] rounded-[10px]"
-                  onClick={() => {
-                    logOut();
-                    storage.remove("token");
-                    navigate("/");
-                  }}
-                >
-                  <LogOut />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex justify-center items-center">
-            <span className="text-[#9EA3B5] text-[16px]">{t("Light")}</span>
-            <label className="relative inline-block w-[70px] h-[34px] mx-[15px]">
-              <input
-                type="checkbox"
-                onChange={changeThemeFunc}
-                checked={isDarkMode}
-                className="w-0 h-0 opacity-0"
-              />
-              <span className="slider round">
-                <div className="dark-icon absolute top-[6px] left-[7px]">
-                  <Dark />
-                </div>
-                <div className="light-icon absolute top-[6px] right-[7px]">
-                  <Light />
-                </div>
-              </span>
-            </label>
-            <span className="text-[#9EA3B5] text-[16px]">{t("Dark")}</span>
-          </div>
-        </div>
-      </div> */}
     </Menu>
   );
 };

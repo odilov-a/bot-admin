@@ -1,10 +1,11 @@
-import { Spin, } from "antd";
+import { Spin } from "antd";
 import { Field } from "formik";
-import { Fields, Button } from "components";
-import { Container } from "modules";
 import { useHooks } from "hooks";
+import { Container } from "modules";
+import { Fields, Button } from "components";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
-const Product = ({ showCreateModal, createModal }: any): JSX.Element => {
+const Product = ({ showCreateModal, createModal, showCreateCategory }: any): JSX.Element => {
   const { t, get } = useHooks();
   let data = createModal.data && createModal?.data;
   return (
@@ -18,60 +19,40 @@ const Product = ({ showCreateModal, createModal }: any): JSX.Element => {
         }}
         fields={[
           {
-            name: "titleUz",
             type: "string",
             required: true,
-            value: get(data, "titleUz"),
+            name: "productNameUz",
+            value: get(data, "productNameUz"),
           },
           {
-            name: "titleRu",
             type: "string",
             required: true,
-            value: get(data, "titleRu"),
+            name: "productNameRu",
+            value: get(data, "productNameRu"),
           },
           {
-            name: "titleEng",
             type: "string",
             required: true,
-            value: get(data, "titleEng"),
+            name: "productNameEn",
+            value: get(data, "productNameEn"),
           },
           {
-            name: "descriptionUz",
-            type: "string",
+            name: "price",
+            type: "number",
             required: true,
-            value: get(data, "descriptionUz"),
+            value: get(data, "price"),
           },
           {
-            name: "descriptionRu",
-            type: "string",
             required: true,
-            value: get(data, "descriptionRu"),
-          },
-          {
-            name: "descriptionEng",
-            type: "string",
-            required: true,
-            value: get(data, "descriptionEng"),
-          },
-          {
-            name: "type",
-            type: get(data, "_id") ? "number" : "object",
+            name: "category",
+            value: get(data, "category.title"),
+            type: get(data, "_id") ? "string" : "object",
             onSubmitValue: (value: any) => value.value,
-            required: true,
-            value: get(data, "type"),
           },
           {
             name: "image",
             required: true,
-            value: get(data, "image[0].small"),
-          },
-          {
-            name: "image02",
-            value: get(data, "image02[0].small"),
-          },
-          {
-            name: "image03",
-            value: get(data, "image03[0].small"),
+            value: get(data, "images[0].small"),
           },
         ]}
         onSuccess={(data, resetForm, query) => {
@@ -83,107 +64,82 @@ const Product = ({ showCreateModal, createModal }: any): JSX.Element => {
           console.log("Error", error);
         }}
       >
-        {({ isLoading, setFieldValue, }) => {
+        {({ isLoading, setFieldValue }) => {
           return (
             <Spin spinning={isLoading} tip="Verifying">
-              <div className="flex justify-between">
-                <div className="w-[48%]">
+              <div className="">
+                <Field
+                  type="text"
+                  size="large"
+                  name="productNameUz"
+                  component={Fields.Input}
+                  rootClassName="mb-[10px]"
+                  label={t("Mahsulot nomi (Uzbekcha)")}
+                  placeholder={t("Mahsulot nomi (Uzbekcha)")}
+                />
+                <Field
+                  type="text"
+                  size="large"
+                  name="productNameRu"
+                  component={Fields.Input}
+                  rootClassName="mb-[10px]"
+                  label={t("Mahsulot nomi (Ruscha)")}
+                  placeholder={t("Mahsulot nomi (Ruscha)")}
+                />
+                <Field
+                  type="text"
+                  size="large"
+                  name="productNameEn"
+                  component={Fields.Input}
+                  rootClassName="mb-[10px]"
+                  label={t("Mahsulot nomi (Inglizcha)")}
+                  placeholder={t("Mahsulot nomi (Inglizcha)")}
+                />
+                <Field
+                  size="large"
+                  name="price"
+                  type="number"
+                  label={t("Narxi")}
+                  component={Fields.Input}
+                  placeholder={t("Narxi")}
+                  rootClassName="mb-[10px]"
+                />
+                <label>{t("Kategoriya tanlang")}</label>
+                <div className="flex justify-between">
                   <Field
-                    label={t("titleUz")}
-                    rootClassName="mb-[10px]"
-                    component={Fields.Input}
-                    name="titleUz"
-                    type="text"
-                    placeholder={t("titleUz")}
-                    size="large"
-                  />
-                  <Field
-                    label={t("titleRu")}
-                    rootClassName="mb-[10px]"
-                    component={Fields.Input}
-                    name="titleRu"
-                    type="text"
-                    placeholder={t("titleRu")}
-                    size="large"
-                  />
-                  <Field
-                    label={t("titleEng")}
-                    rootClassName="mb-[10px]"
-                    component={Fields.Input}
-                    name="titleEng"
-                    type="text"
-                    placeholder={t("titleEng")}
-                    size="large"
-                  />
-                  <Field
-                    component={Fields.SelectNew}
-                    name="type"
-                    placeholder={"Mahsulot turi"}
-                    label={("Mahsulot turi")}
-                    optionLabel="label"
-                    optionValue="value"
-                    options={[
-                      { value: 1, label: t("Xom tovuq") },
-                      { value: 2, label: t("Yarim tayyor") },
-                      { value: 3, label: t("Muzlagan") },
-                    ]}
+                    name="category"
+                    url="/categories"
+                    optionValue="_id"
+                    optionLabel="category.title"
+                    component={Fields.AntAsyncSelect}
+                    placeholder={t("Kategoriya tanlang")}
                     onChange={(option: { [key: string]: any }) => {
-                      setFieldValue("type", option.value);
+                      setFieldValue("category.title", option);
                     }}
-                    rootClassName="mb-[10px]"
+                    params={{ limit: 10 }}
+                    rootClassName="w-full"
+                    className="w-full mb-[10px]"
                   />
-                    <label>{t("Rasm yuklash")}</label>
-                  <div className="flex">
-                    <Field
-                      component={Fields.FileUpload}
-                      setFieldValue={setFieldValue}
-                      name="image"
-                      accept="image/png, image/jpeg, image/jpg"
-                    />
-                    <Field
-                      component={Fields.FileUpload}
-                      setFieldValue={setFieldValue}
-                      name="image02"
-                      accept="image/png, image/jpeg, image/jpg"
-                    />
-                    <Field
-                      component={Fields.FileUpload}
-                      setFieldValue={setFieldValue}
-                      name="image03"
-                      accept="image/png, image/jpeg, image/jpg"
-                    />
+                  <div
+                    className="ml-[20px] flex justify-center items-center w-[40px] h-[40px] cursor-pointer bg-[#3367F6] rounded-[5px]"
+                    onClick={() => showCreateCategory(true)}
+                  >
+                    <PlusCircleOutlined style={{ color: "#fff" }} />
                   </div>
                 </div>
-                <div className="w-[48%]">
-                  <Field
-                    component={Fields.Textarea}
-                    name="descriptionUz"
-                    rows={3}
-                    rootClassName="mb-[10px]"
-                    label={t("Ma'lumot (Uzbekcha)")}
-                    placeholder={t("Ma'lumot (Uzbekcha)")}
-                    required
-                  />
-                  <Field
-                    component={Fields.Textarea}
-                    name="descriptionRu"
-                    rows={3}
-                    rootClassName="mb-[10px]"
-                    label={t("Ma'lumot (Ruscha)")}
-                    placeholder={t("Ma'lumot (Ruscha)")}
-                    required
-                  />
-                  <Field
-                    component={Fields.Textarea}
-                    name="descriptionEng"
-                    rows={3}
-                    rootClassName="mb-[10px]"
-                    label={t("Ma'lumot (Inglizcha)")}
-                    placeholder={t("Ma'lumot (Inglizcha)")}
-                    required
-                  />
-                  <Button title={t("Saqlash")} className="w-full mt-[40px]" htmlType="submit" size="large" />
-                </div>
+                <label>{t("Rasm yuklash")}</label>
+                <Field
+                  name="image"
+                  component={Fields.FileUpload}
+                  setFieldValue={setFieldValue}
+                  accept="image/png, image/jpeg, image/jpg"
+                />
+                <Button
+                  title={t("Saqlash")}
+                  className="w-full mt-[10px]"
+                  htmlType="submit"
+                  size="large"
+                />
               </div>
             </Spin>
           );

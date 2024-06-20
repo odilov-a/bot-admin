@@ -1,18 +1,20 @@
-import { useState } from "react";
-import { Modal, notification, Pagination, Row, Col  } from "antd";
-import { Container } from "modules";
-import { useHooks, usePost } from "hooks";
-import { Button } from "components";
-import Create from "./create";
-import { Delete, Edit, CreateDoc } from "assets/images/icons";
 import More from "./more";
+import Create from "./create";
+import { useState } from "react";
+import { Container } from "modules";
+import { Button } from "components";
+import { useHooks, usePost } from "hooks";
+import CategoryCreate from "./categoryCreate";
+import { Delete, Edit, CreateDoc } from "assets/images/icons";
+import { Modal, notification, Pagination, Row, Col  } from "antd";
 
 const Product = () => {
+  const { mutate } = usePost();
+  const [page, setPage] = useState(1);
   const { get, queryClient, t } = useHooks();
+  const [createCategory, showCreateCategory] = useState(false)
   const [createModal, showCreateModal] = useState({ open: false, data: {} });
   const [moreModal, showMoreModal] = useState({ open: false, data: {} });
-  const [page, setPage] = useState(1);
-  const { mutate } = usePost();
   const onDeleteHandler = (id: string) => {
     Modal.confirm({
       title: t("Вы действительно хотите удалить product?"),
@@ -51,15 +53,26 @@ const Product = () => {
   return (
     <div className="flex">
       <Modal
+        open={createCategory}
+        onCancel={() => showCreateCategory(false)}
+        footer={null}
+        centered
+        title={t("Create new category")}
+        width={500}
+        destroyOnClose
+      >
+        <CategoryCreate {...{ createCategory, showCreateCategory }} />
+      </Modal>
+      <Modal
         open={createModal.open}
         onCancel={() => showCreateModal({ open: false, data: {} })}
         footer={null}
         centered
         title={get(createModal, "data._id") ? t("Update product") : t("Create product")}
-        width={900}
+        width={600}
         destroyOnClose
       >
-        <Create {...{ showCreateModal, createModal }} />
+        <Create {...{ showCreateModal, createModal, showCreateCategory }} />
       </Modal>
       <Modal
         open={moreModal?.open}
@@ -68,7 +81,7 @@ const Product = () => {
         footer={null}
         centered
         title={t("More informaiton")}
-        width={850}
+        width={600}
         destroyOnClose
       >
         <More {...{ showMoreModal, moreModal }} />
@@ -120,7 +133,7 @@ const Product = () => {
                             )}
                           >
                           <div className="mr-8 mb-4">
-                          <img className="object-cover rounded-[10px] w-[260px] h-[200px]" src={get(card, "image[0].medium")} />
+                          <img className="object-cover rounded-[10px] w-[260px] h-[200px]" src={get(card, "images[0].medium")} />
                           <div className="btnPanel2">
                               <div
                                 className="editBtn"
@@ -142,7 +155,6 @@ const Product = () => {
                               </div>
                             </div>
                           </div>
-                          
                         </Col>
                       </>
                     );
